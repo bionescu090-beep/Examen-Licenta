@@ -1,206 +1,611 @@
-<!DOCTYPE html>
-<html lang="ro">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grile Licență - Informatică Economică</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
-        .app-container {
-            background-color: white;
-            width: 100%;
-            max-width: 850px;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        h2 { text-align: center; color: #2c3e50; border-bottom: 2px solid #e9ecef; padding-bottom: 15px; }
-        
-        /* Tabs */
-        .nav-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
-        .tab-btn { padding: 12px 20px; font-size: 1.05em; font-weight: bold; background: #e9ecef; color: #495057; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; }
-        .tab-btn.active { background: #007bff; color: white; box-shadow: 0 3px 8px rgba(0,123,255,0.3); }
-        .tab-btn:hover:not(.active) { background: #dee2e6; }
+// ==========================================
+// BAZA DE DATE - DISCIPLINE FUNDAMENTALE
+// ==========================================
+const fundamentaleData = [
+    {
+        q: "1. Gruparea angajaților pe subdiviziuni organizatorice, în funcție de sarcinile pe care aceştia le execută, reprezintă:",
+        options: ["a. previziune", "b. organizare", "c. antrenare", "d. control-evaluare"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Organizarea structurală se concretizează în gruparea activităților pe secții și ateliere. [cite: 486]"
+    },
+    {
+        q: "2. Funcţia de coordonare cuprinde un ansamblu de activități prin care se asigură:",
+        options: ["a. armonizarea și sincronizarea acțiunilor", "b. extrapolarea tendințelor", "c. reconsiderarea factorilor", "d. eliminarea cauzelor"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Coordonarea = armonizare și sincronizare, ca într-o orchestră. [cite: 486]"
+    },
+    {
+        q: "3. Sfera de autoritate reprezintă:",
+        options: ["a. gradul de îndeplinire a sarcinilor", "b. numărul de persoane subordonate nemijlocit", "c. cantitatea de muncă", "d. competențele managerului"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Sfera de autoritate se referă strict la numărul de oameni pe care îi conduci direct. [cite: 486]"
+    },
+    {
+        q: "4. Îndeplinirea corespunzătoare a funcției de antrenare presupune:",
+        options: ["a. înțelegerea rolului și particularităților factorului uman", "b. manageri cu pregătire deosebită", "c. controlul asupra subordonaților", "d. un sistem de motivare bazat pe sancțiuni"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Antrenarea = motivarea oamenilor, deci trebuie să înțelegi 'factorul uman'. [cite: 486]"
+    },
+    {
+        q: "5. Cerințele de raționalitate: '...am știut să înlăturăm improvizația și rutina, dar și datorită încadrării în perioada optimă'. La ce se referă?",
+        options: ["a. fundamentarea științifică și oportunitatea", "b. oportunitatea și conținutul complet", "c. claritatea și concizia", "d. împuternicirea și fundamentarea"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Înlăturarea improvizației = fundamentare științifică. Perioada optimă = oportunitate. [cite: 486]"
+    },
+    {
+        q: "6. Cerinţa ca o decizie să fie împuternicită se referă la faptul că:",
+        options: ["a. este adoptată de cel în ale cărui sarcini este înscrisă", "b. este adoptată de un specialist", "c. este în concordanţă cu obiectivele", "d. este adoptată de managementul de vârf"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Împuternicit = ai dreptul/puterea legală în fișa postului să iei acea decizie. [cite: 486]"
+    },
+    {
+        q: "7. Aplicând metoda utilității globale pentru alegerea unui utilaj (F1, F2, F3), decizia optimă este:",
+        options: ["a. F1 (F1, F2, F3)", "b. F2 (F2, F1, F3)", "c. F3 (F3, F1, F2)", "d. F1 și ordinea F1, F3, F2"],
+        correct: 3,
+        expl: "🧠 <strong>Truc:</strong> După calculul utilităților (preț mic, garanție mare, recuperare rapidă), F1 iese pe primul loc, urmat de F3 și F2. [cite: 486]"
+    },
+    {
+        q: "8. Aplicând regula pesimistă (Wald) pentru cantitatea produsă (V1, V2, V3), varianta optimă este:",
+        options: ["a. V1", "b. V2", "c. V3", "d. V3 și ordinea V3, V2, V1"],
+        correct: 3,
+        expl: "🧠 <strong>Truc:</strong> Regula pesimistă alege 'răul cel mai mic' (maximul dintre minime). V3 oferă cele mai sigure rezultate pe un scenariu prost. [cite: 486]"
+    },
+    {
+        q: "9. Marian Dragu încurajează angajații să-și exprime opiniile, stimulează colaborarea. Stilul său este:",
+        options: ["a. autoritar", "b. democrat", "c. permisiv", "d. manipulativ"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Colaborarea și ascultarea echipei definesc stilul democrat (participativ). [cite: 486]"
+    },
+    {
+        q: "10. Reprezintă elementele 'cele mai vizibile' ale unei culturi organizaționale:",
+        options: ["a. semnele", "b. miturile", "c. tabuurile", "d. percepțiile salariaţilor"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Semnele și simbolurile (logo, dress code) sunt primele lucruri pe care le vezi (sunt la suprafață). [cite: 486]"
+    },
+    {
+        q: "11. Imobilizările corporale ale entităţii se caracterizează prin:",
+        options: ["a. valori mari şi utilizare limitată", "b. valori stabilite de Guvern", "c. utilizare mai mare de un an şi depăşirea limitei de valoare", "d. lichiditate crescută"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> Ca să fie 'mijloc fix' (imobilizare), trebuie să-l folosești peste un an și să coste peste 2500 lei. [cite: 486]"
+    },
+    {
+        q: "12. Datoriile din cumpărări de stocuri şi servicii sunt reflectate de:",
+        options: ["a. credite bancare", "b. sume datorate asociaţilor", "c. furnizori", "d. clienți-creditori"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> Cumperi marfă/servicii? Primești factură de la FURNIZOR. [cite: 486]"
+    },
+    {
+        q: "13. Plata din bancă a unei obligaţii către furnizor determină:",
+        options: ["a. scădere disponibil, scădere obligații (modificare structură)", "b. scădere disponibil, scădere obligații (modificare de volum în sensul diminuării)", "c. scădere disponibil și creanță", "d. creştere obligații"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Ies banii din bancă (-Activ), dispare datoria (-Pasiv). Tot bilanțul 'se micșorează' (volum diminuat). [cite: 486]"
+    },
+    {
+        q: "14. Plata cu numerar a salariilor cuvenite angajaţilor determină:",
+        options: ["a. scăderea numerarului, creşterea datoriei", "b. scăderea numerarului, scăderea datoriei (modificare de volum - diminuare)", "c. creşterea numerarului", "d. scăderea numerarului, creşterea creanţelor"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Același principiu: dai bani fizici din casă (-Activ), scapi de datoria la angajați (-Pasiv). [cite: 486]"
+    },
+    {
+        q: "15. În debitul conturilor se înregistrează:",
+        options: ["a. numai elemente ce cresc", "b. creşteri de active şi scăderi de pasive", "c. numai elemente ce scad", "d. scăderi de active și creşteri de pasive"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Regula de aur: Activul crește pe Debit (+). Pasivul scade pe Debit (-). [cite: 486]"
+    },
+    {
+        q: "16. Formulele contabile de stornare în negru:",
+        options: ["a. anulează o formulă prin inversarea acesteia", "b. nu denaturează rulajul mărindu-l artificial", "c. nu stabilește corespondențe nereale", "d. anulează prin repetare"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Stornarea în negru înseamnă să faci o nouă înregistrare, dar fix inversă (Schimbi debitorul cu creditorul) pentru a anula greșeala. [cite: 486]"
+    },
+    {
+        q: "17. Rulajele debitoare ale conturilor de activ sunt formate din:",
+        options: ["a. existentul inițial + sumele din cursul perioadei", "b. sold inițial + sold final", "c. total debitoare - total creditoare", "d. valorile obţinute prin adunarea tuturor sumelor înregistrate în debit în cursul perioadei"],
+        correct: 3,
+        expl: "🧠 <strong>Truc:</strong> Rulaj înseamnă DOAR mișcările/tranzacțiile din luna respectivă adunate (fără a include soldul cu care ai plecat la drum). [cite: 486]"
+    },
+    {
+        q: "18. În partea dreaptă (creditul) a unei formule contabile se înscriu:",
+        options: ["a. conturi care reflectă creşteri de pasiv și scăderi de activ", "b. scăderi de pasiv", "c. creşteri de activ", "d. creşteri de pasiv şi activ"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> În dreapta (Credit) cresc datoriile (Pasivul) și scad averile (Activul). [cite: 486]"
+    },
+    {
+        q: "19. Cont 5121: Sold iniţial 700 lei, Total Sume Creditoare 2000 lei, Sold Final 3000 lei. Rulajul debitor este:",
+        options: ["a. 1000 lei", "b. 1700 lei", "c. 4300 lei", "d. 1800 lei"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> SF = SI + RulajDebit - RulajCredit. Deci 3000 = 700 + RD - 2000. RD = 4300 lei. [cite: 486]"
+    },
+    {
+        q: "20. Cont 404: SI=2000 lei (Pasiv). Achiziții: 1600+700 (pe Credit). Plăți: 900+1800+700 (pe Debit). Soldul final este:",
+        options: ["a. 900 lei", "b. 4300 lei", "c. 1300 lei", "d. 7700 lei"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Datoria crește la achiziții (2000 + 2300 = 4300) și scade la plăți (4300 - 3400 = 900 lei rest de plată). [cite: 486]"
+    },
+    {
+        q: "21. Precizaţi care dintre următoarele relații este corectă (Macroeconomie):",
+        options: ["a. PNB=PIN+PIB", "b. PIB=PGB+Ci", "c. PIN=PIB-Amortizare (A)", "d. PNN=PIN+VN-A"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> NET = BRUT - Amortizare. Deci Produsul Intern Net este Produsul Intern Brut din care scazi uzura (Amortizarea). [cite: 486]"
+    },
+    {
+        q: "22. Precizaţi care dintre următoarele relații este incorectă:",
+        options: ["a. PIB=PGB-Ci", "b. PIN=EVAN", "c. PNN=PNB+Amortizare", "d. PIB=PIN+A"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> Relația 'c' este greșită pentru că Netul (PNN) trebuie să fie Brutul (PNB) MINUS amortizarea, nu plus! [cite: 486]"
+    },
+    {
+        q: "23. Produsul intern brut (PIB) se calculează în modul următor:",
+        options: ["a. PIB = PIN - Amortizare", "b. PIB = Suma Valoarea Adăugată Brută (VAB)", "c. PIB = PGB + Ci", "d. PIB = PNB - PNN"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> PIB-ul național este suma tuturor valorilor adăugate brute (VAB) produse în țară. [cite: 486]"
+    },
+    {
+        q: "24. În perioada recesiunii economice, măsurile de politică bugetară cu caracter anticiclic presupun:",
+        options: ["a. menținerea sau creşterea ponderii cheltuielilor publice în PIB", "b. creşterea fiscalității", "c. scăderea cheltuielilor", "d. creşterea ratei dobânzii"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Când economia e în criză (recesiune), Statul trebuie să pompeze bani (să crească cheltuielile publice) ca să o salveze (anticiclic). [cite: 486]"
+    },
+    {
+        q: "25. În faza de creștere economică prelungită, politicile anticiclice urmăresc:",
+        options: ["a. reducerea fiscalității", "b. menținerea sau reducerea cheltuielilor publice în PIB", "c. scăderea dobânzii", "d. creşterea cheltuielilor"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Invers! Dacă economia duduie, Statul strânge cureaua (reduce cheltuielile) ca să nu provoace o inflație uriașă. [cite: 486]"
+    },
+    {
+        q: "26. În faza de recesiune/criză economică, politicile economice anticiclice presupun:",
+        options: ["a. scăderea cheltuielilor publice", "b. creşterea dobânzii", "c. menținerea sau reducerea gradului de fiscalitate", "d. reducerea creditului"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> Pe timp de criză trebuie să ajuți firmele, deci reduci sau menții taxele (fiscalitatea) la un nivel suportabil. [cite: 486]"
+    },
+    {
+        q: "27. Inflaţia prin cerere apare ca urmare:",
+        options: ["a. scăderii cererii", "b. creşterii cererii sub nivelul ofertei", "c. ofertei egale cu cererea", "d. creşterii cererii agregate, într-un ritm mai mare decât oferta agregată"],
+        correct: 3,
+        expl: "🧠 <strong>Truc:</strong> Prețurile cresc (inflație) pentru că oamenii VOR să cumpere (Cerere) mult mai mult decât se PRODUCE efectiv (Ofertă). [cite: 486]"
+    },
+    {
+        q: "28. Factorii care pot deveni cauze ale inflaţiei prin costuri sunt:",
+        options: ["a. creşterea salariilor într-un ritm superior creşterii productivității muncii", "b. scăderea prețurilor la materii", "c. presiune fiscală scăzută", "d. salarii cel mult egale cu productivitatea"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Dacă le dai oamenilor mai mulți bani pe salariu fără ca ei să producă mai multă marfă (productivitate), costurile firmei explodează. [cite: 486]"
+    },
+    {
+        q: "29. Dacă prețurile cresc: Alimente(65%)x105%, Nealimente(25%)x103%, Servicii(10%)x108%. IPC și Rata Inflației sunt:",
+        options: ["a. 108,4% şi 8,4%", "b. 104,8% şi 4,8%", "c. 105,3% şi 5,3%", "d. 103,5% şi 3,5%"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Faci media ponderată: (65x105 + 25x103 + 10x108)/100 = 104,8%. Inflația e diferența peste 100% -> 4,8%. [cite: 486]"
+    },
+    {
+        q: "30. Nivelul şomajului se determină astfel:",
+        options: ["a. absolut (populație activă - șomeri)", "b. absolut (ocupați - neocupați)", "c. în mărime relativă, ca raport procentual între numărul total al şomerilor şi populaţia activă", "d. relativ (pop. activa / șomeri)"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> Rata șomajului la știri e mereu un procent (relativ), calculat împărțind șomerii la toți oamenii care pot munci (populația activă). [cite: 486]"
+    },
+    {
+        q: "31. Capitalul total, după modalitățile de folosinţă, se materializează în:",
+        options: ["a. capital social, datorii, active", "b. capital social, datorii TL, datorii TS", "c. capital permanent, datorii pe termen scurt, lung", "d. active imobilizate și active circulante"],
+        correct: 3,
+        expl: "🧠 <strong>Truc:</strong> Folosința (ce faci cu ei) se vede în Activul bilanțului: bunuri pe termen lung (imobilizate) sau scurt (circulante). [cite: 486]"
+    },
+    {
+        q: "32. Capitalul propriu al întreprinderii se constituie prin:",
+        options: ["a. capital social + datorii TS", "b. capital permanent + datorii", "c. însumarea capitalului social cu grupa primelor de capital, rezervelor și rezultatelor", "d. capital total - datorii"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> Capitalul tău = Banii băgați la început (social) + ce ai strâns pe parcurs (rezerve, profit, prime). [cite: 486]"
+    },
+    {
+        q: "33. Activele imobilizate cuprind următoarele componente:",
+        options: ["a. necorporale, corporale, stocuri", "b. imobilizări necorporale, imobilizări corporale, imobilizări financiare", "c. necorporale, financiare, stocuri", "d. stocuri, creanțe"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Cele 3 mari categorii care stau ani de zile în firmă: Licențe (necorporale), Clădiri/Utilaje (corporale) și Acțiuni (financiare). [cite: 486]"
+    },
+    {
+        q: "34. Date: Cap.Prop=105k, DTL=70k, DTS=53k, Imobilizari=135k. Fondul de Rulment Net (FRN) este:",
+        options: ["a. 25.000 lei", "b. 23.000 lei", "c. 40.000 lei", "d. 45.000 lei"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> FRN = Capital Permanent (CapPropriu + DTL) - Imobilizări. (105k + 70k) - 135k = 40.000 lei. [cite: 486]"
+    },
+    {
+        q: "35. Obligaţiunile sunt titluri de valoare care exprimă:",
+        options: ["a. creanţa emitentului", "b. angajamentul emitentului de a plăti dobânda şi de a rambursa împrumutul", "c. obligația deținătorilor", "d. proprietatea"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Obligațiunea e o chitanță pe o datorie (împrumut) la care emitentul garantează rambursarea și plata dobânzii. [cite: 486]"
+    },
+    {
+        q: "36. Printre elementele tehnice ale obligațiunilor se regăsesc:",
+        options: ["a. preţul de emisiune, anuitatea, dobânda", "b. valoarea nominală, dividende", "c. termen rambursare, dobânda, atribuire", "d. valoare nominală, dobânda, subscriere"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Elementele tehnice definesc banii: Cu cât se vinde (Preț emisiune), cât dai înapoi (Anuitate), ce plus aduce (Dobânda). [cite: 486]"
+    },
+    {
+        q: "37. Valoarea actualizată netă (VAN) se stabileşte ca:",
+        options: ["a. diferență între suma cash flow-urilor actualizate și capitalul investit", "b. sumă între ele", "c. raport", "d. diferență față de amortisment"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> VAN arată profitul real al unui proiect: scazi din încasările viitoare (cash flow) banii băgați la început (investiția). [cite: 486]"
+    },
+    {
+        q: "38. Amortizarea accelerată presupune:",
+        options: ["a. liniar la valoarea fiscală", "b. multiplicarea cotei", "c. pentru primul an de utilizare, amortizarea nu poate depăși 50% din valoarea de intrare", "d. constant pe durata de utilizare"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> Accelerat = scazi o sumă uriașă direct în primul an (până la 50%), apoi mergi normal (liniar) pentru restul anilor. [cite: 486]"
+    },
+    {
+        q: "39. Accelerarea vitezei de rotație a activelor circulante presupune:",
+        options: ["a. reducerea coeficientului", "b. creşterea vitezei în zile", "c. reducerea numărului de rotații", "d. creşterea coeficientului vitezei de rotaţie"],
+        correct: 3,
+        expl: "🧠 <strong>Truc:</strong> Dacă vinzi și cumperi marfa mai repede, marfa se roteste de mai multe ori (crește coeficientul). [cite: 486]"
+    },
+    {
+        q: "40. Rata rentabilității financiare exprimă:",
+        options: ["a. capacitatea de a realiza profit brut", "b. capacitatea firmelor de a realiza profit net pe baza capitalurilor proprii", "c. profit din exploatare", "d. profit din capital angajat"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> 'Financiar' se referă direct la banii patronilor (Capital Propriu) și cât profit net le aduc acești bani. [cite: 486]"
+    },
+    {
+        q: "41. Ce format de export Excel păstrează documentele exact la fel pe orice PC, fără a putea fi modificat ușor?",
+        options: ["a. XLS", "b. TXT", "c. CSV", "d. PDF/XPS"],
+        correct: 3,
+        expl: "🧠 <strong>Truc:</strong> PDF (Portable Document Format) 'îngheață' aspectul și previne editările. [cite: 486]"
+    },
+    {
+        q: "42. Opțiunea care oferă posibilitatea repetării liniilor din antet la printare pentru fiecare pagină:",
+        options: ["a. Rows to repeat at top", "b. Column to repeat", "c. Print area", "d. Header/Footer"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Traducerea exactă din engleză: 'Rânduri de repetat în partea de sus'. [cite: 486]"
+    },
+    {
+        q: "43. Opțiunea comenzii Paste Special care transformă coloanele copiate în rânduri sau invers:",
+        options: ["a. Formulas", "b. Transpose", "c. Formats", "d. Values"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> 'Transpunerea' unei matrice o întoarce pe o parte (coloana devine rând). [cite: 486]"
+    },
+    {
+        q: "44. Fill -> Series -> Columns -> Type: Growth -> Step: 2. Pornind de la C1=1, valoarea din C5 va fi:",
+        options: ["a. 16", "b. 15", "c. 5", "d. 9"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Growth înseamnă înmulțire. (1x2=2, 2x2=4, 4x2=8, 8x2=16). A 5-a celulă e 16. [cite: 486]"
+    },
+    {
+        q: "45. La sortare, opțiunea 'My data has headers' se bifează dacă:",
+        options: ["a. lista de sortat are pe prima linie specificațiile de antet", "b. lista nu are antet", "c. antetul intră la ordonare", "d. activează linie de total"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> 'Data has headers' înseamnă 'Datele mele au deja un cap de tabel' și îi spui Excelului să nu sorteze și titlul coloanelor (Nume, Prenume) odată cu restul. [cite: 486]"
+    },
+    {
+        q: "46. Celula H10 conține =B10+$C$10. Se copiază în J10. Formula devine:",
+        options: ["a. =D10+$C$10", "b. =C10+$C$10", "c. B10+$C$10", "d. =C10+$D$10"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Sari de la H la J (2 coloane). B urcă cu 2 litere (la D). $C$10 este blocat/absolut, deci nu se schimbă. [cite: 486]"
+    },
+    {
+        q: "47. Funcţia NOW() returnează:",
+        options: ["a. data curentă", "b. data și ora curentă", "c. locația curentă", "d. ora curentă"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> NOW() îți spune totul despre 'ACUM': și ziua, și ceasul. (TODAY îți dădea doar data). [cite: 486]"
+    },
+    {
+        q: "48. Care este rezultatul funcției =FIND('C'; 'ABCDE'; 1)?",
+        options: ["a. 1", "b. 5", "c. 3", "d. 0"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> Caută litera 'C' în șirul ABCDE. E a treia literă! Deci rezultatul e 3. [cite: 486]"
+    },
+    {
+        q: "49. Care este rezultatul funcției =MID('ABCDE'; 3; 2)?",
+        options: ["a. C", "b. CDE", "c. DE", "d. CD"],
+        correct: 3,
+        expl: "🧠 <strong>Truc:</strong> MID ia din mijloc: te duci la a 3-a literă ('C') și extragi de acolo 2 litere ('C' și 'D'). [cite: 486]"
+    },
+    {
+        q: "50. Funcția LOOKUP(lookup_value, lookup_vector, result_vector). Ce reprezintă parametrul lookup_vector?",
+        options: ["a. vector rezultat", "b. valoarea căutată", "c. domeniul dintr-un singur rând/coloană ce conține valoarea căutată", "d. vector căutat"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> 'Vectorul de căutare' (lookup_vector) este zona din Excel pe care o evidențiezi pentru ca PC-ul să caute un cuvânt acolo. [cite: 486]"
+    }
+];
 
-        /* Quiz */
-        .question { font-size: 1.15em; font-weight: 600; margin: 20px 0 15px; color: #2c3e50; }
-        .btn-grid { display: flex; flex-direction: column; gap: 10px; }
-        .btn { padding: 12px 20px; font-size: 1em; background: #fff; border: 2px solid #dce0e4; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.2s; color: #333; }
-        .btn:hover:not(:disabled) { background: #e9ecef; }
-        .btn.correct { background: #d4edda !important; border-color: #28a745 !important; color: #155724 !important; font-weight: bold; }
-        .btn.wrong { background: #f8d7da !important; border-color: #dc3545 !important; color: #721c24 !important; text-decoration: line-through; }
-        .btn:disabled { cursor: not-allowed; }
-        
-        /* Explicații */
-        .explanation { display: none; margin-top: 15px; padding: 15px; background: #e2f3f5; border-left: 5px solid #17a2b8; border-radius: 4px; color: #0c5460; line-height: 1.5; }
-        
-        .section { display: none; }
-        .section.active { display: block; }
-    </style>
-</head>
-<body>
-
-    <div class="app-container">
-        <h2>Pregătire Licență 2026</h2>
-        
-        <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchTab('fundamentale', this)">Discipline Fundamentale</button>
-            <button class="tab-btn" onclick="switchTab('specialitate', this)">Discipline de Specialitate</button>
-        </div>
-
-        <!-- Secțiunea FUNDAMENTALE -->
-        <div id="fundamentale" class="section active">
-            <div id="quiz-fundamentale"></div>
-        </div>
-
-        <!-- Secțiunea SPECIALITATE -->
-        <div id="specialitate" class="section">
-            <div id="quiz-specialitate"></div>
-        </div>
-    </div>
-
-    <script>
-        // BAZA DE DATE - DISCIPLINE FUNDAMENTALE
-        const fundamentaleData = [
-            {
-                q: "1. Gruparea angajaților pe subdiviziuni organizatorice (departamente, servicii, secții, ateliere etc.), în funcție de sarcinile pe care aceștia le execută, reprezintă o activitate specifică funcției:",
-                options: [
-                    "a. previziune",
-                    "b. organizare",
-                    "c. antrenare",
-                    "d. control-evaluare"
-                ],
-                correct: 1,
-                expl: "🧠 <strong>Truc de memorare:</strong> Organizarea structurală se concretizează exact în gruparea activităților pe secții, ateliere, birouri, rezultând structura organizatorică a întreprinderii."
-            },
-            {
-                q: "2. Funcția de coordonare cuprinde un ansamblu de activități prin care se asigură:",
-                options: [
-                    "a. armonizarea și sincronizarea acțiunilor individuale și colective din cadrul întreprinderii",
-                    "b. extrapolarea tendințelor prezente în activitatea întreprinderii",
-                    "c. reconsiderarea factorilor care îi motivează pe salariații întreprinderii",
-                    "d. eliminarea cauzelor care au condus la performanțe sub standardele stabilite inițial"
-                ],
-                correct: 0,
-                expl: "🧠 <strong>Truc de memorare:</strong> Coordonarea înseamnă a face oamenii să lucreze împreună ca un ceasornic. Cuvintele cheie sunt <em>armonizare</em> și <em>sincronizare</em> spre scopul general comun."
-            },
-            {
-                q: "3. Sfera de autoritate reprezintă:",
-                options: [
-                    "a. gradul de îndeplinire a sarcinilor de către manager",
-                    "b. numărul de persoane sau de compartimente subordonate nemijlocit de către un manager",
-                    "c. cantitatea de muncă pe care trebuie să o depună un manager",
-                    "d. competențele pe care le deține un manager în domeniul postului ocupat"
-                ],
-                correct: 1,
-                expl: "🧠 <strong>Truc de memorare:</strong> Cât de 'mare' este influența ta? Sfera ta se măsoară strict în câți oameni sau câte departamente conduci <em>direct</em> (nemijlocit)."
-            }
-        ];
-
-        // BAZA DE DATE - DISCIPLINE DE SPECIALITATE
-        const specialitateData = [
-            {
-                q: "1. Obiectivele etapei de proiectare logică a unui sistem informatic sunt:",
-                options: [
-                    "a) determinarea cerințelor organizatorice informaționale și procedurale ale beneficiarilor",
-                    "b) descrierea soluțiilor sistemului propus",
-                    "c) definirea sistemului informatic din punct de vedere structural și funcțional",
-                    "d) prezentarea metodelor folosite de culegere a datelor"
-                ],
-                correct: 2,
-                expl: "🧠 <strong>Truc de memorare:</strong> Logica = Structură + Funcționalitate. Proiectarea logică elaborează concepția sistemului (din ce e format și cum funcționează ca un tot unitar)."
-            },
-            {
-                q: "2. Proiectarea logică a unui sistem informatic presupune:",
-                options: [
-                    "a) determinarea cerințelor organizatorice",
-                    "b) stabilirea componentelor sistemului informatic, a legăturilor dintre ele și a funcționalității structurii sale",
-                    "c) elaborarea strategiei de definire a procedurilor",
-                    "d) proiectarea structurală și funcțională a datelor organizate în baze de date la nivelul aplicațiilor"
-                ],
-                correct: 1,
-                expl: "🧠 <strong>Truc de memorare:</strong> Se leagă direct de întrebarea 1. Pentru a defini sistemul structural și funcțional, trebuie să îi stabilești clar componentele și legăturile dintre ele."
-            },
-            {
-                q: "3. Intrările sistemului informatic:",
-                options: [
-                    "a) sunt reprezentate de operațiile prin care se generează un flux de date ce semnifică schimbările în colecțiile de date",
-                    "b) realizează actualizarea și exploatarea colecțiilor de date",
-                    "c) acționează asupra colecțiilor de date",
-                    "d) constituie rezultatul prelucrării colecțiilor de date"
-                ],
-                correct: 0,
-                expl: "🧠 <strong>Truc de memorare:</strong> Intrările sunt tranzacțiile externe (operațiile de intrare) care produc modificări și actualizează baza de date."
-            }
-        ];
-
-        function switchTab(tabId, btn) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            
-            btn.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
-        }
-
-        function renderQuiz(dataArray, containerId) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = ''; // Curăță containerul
-            
-            dataArray.forEach((item, qIndex) => {
-                const questionDiv = document.createElement('div');
-                questionDiv.className = 'question';
-                questionDiv.innerHTML = item.q;
-                
-                const btnGrid = document.createElement('div');
-                btnGrid.className = 'btn-grid';
-                
-                item.options.forEach((optText, oIndex) => {
-                    const btn = document.createElement('button');
-                    btn.className = 'btn';
-                    btn.innerHTML = optText;
-                    btn.onclick = function() { checkAnswer(this, qIndex, oIndex, dataArray, containerId); };
-                    btnGrid.appendChild(btn);
-                });
-
-                const explDiv = document.createElement('div');
-                explDiv.id = `expl-${containerId}-${qIndex}`;
-                explDiv.className = 'explanation';
-                explDiv.innerHTML = item.expl;
-
-                container.appendChild(questionDiv);
-                container.appendChild(btnGrid);
-                container.appendChild(explDiv);
-            });
-        }
-
-        function checkAnswer(clickedBtn, qIndex, oIndex, dataArray, containerId) {
-            const btnGrid = clickedBtn.parentElement;
-            const buttons = btnGrid.querySelectorAll('button');
-            const explDiv = document.getElementById(`expl-${containerId}-${qIndex}`);
-            
-            // Dezactivează butoanele după răspuns
-            buttons.forEach(b => b.disabled = true);
-            
-            if (oIndex === dataArray[qIndex].correct) {
-                clickedBtn.classList.add('correct');
-            } else {
-                clickedBtn.classList.add('wrong');
-                buttons[dataArray[qIndex].correct].classList.add('correct');
-            }
-            
-            explDiv.style.display = 'block';
-        }
-
-        // Inițializare aplicație
-        renderQuiz(fundamentaleData, 'quiz-fundamentale');
-        renderQuiz(specialitateData, 'quiz-specialitate');
-    </script>
-</body>
-</html>
+// ==========================================
+// BAZA DE DATE - DISCIPLINE DE SPECIALITATE
+// ==========================================
+const specialitateData = [
+    {
+        q: "1. Obiectivele etapei de proiectare logică a unui sistem informatic sunt:",
+        options: ["a. determinarea cerinţelor", "b. descrierea soluțiilor", "c. definirea sistemului informatic din punct de vedere structural şi funcţional", "d. prezentarea metodelor"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> Logica sistemului implică definirea lui conceptuală: cum arată (structură) și ce face (funcțional). [cite: 821]"
+    },
+    {
+        q: "2. Proiectarea logică a unui sistem informatic presupune:",
+        options: ["a. determinarea cerințelor", "b. stabilirea componentelor sistemului informatic, a legăturilor dintre ele şi a funcționalității", "c. strategia bazelor de date", "d. proiectarea de date la nivel aplicații"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Se completează cu grila 1. E vorba de piese (componente) și cum lucrează împreună (legături/funcționalitate). [cite: 821]"
+    },
+    {
+        q: "3. Intrările sistemului informatic:",
+        options: ["a. sunt operațiile prin care se generează un flux de date ce semnifică schimbările în colecţiile de date", "b. realizează actualizarea", "c. acţionează asupra bazelor", "d. constituie rezultatul prelucrării"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> O 'intrare' declanșează o schimbare. Introduci o factură nouă -> generezi un flux ce schimbă soldul bazei de date. [cite: 821]"
+    },
+    {
+        q: "4. Documentele de intrare sunt documentele:",
+        options: ["a. care presupun proceduri automate", "b. obținute din prelucrare", "c. ce redau dinamica", "d. al căror conținut de date urmează a se prelucra în vederea obţinerii unor noi documente"],
+        correct: 3,
+        expl: "🧠 <strong>Truc:</strong> Iei documentul 'crud', îl prelucrezi în soft și la sfârșit obții rapoarte/noi documente. [cite: 821]"
+    },
+    {
+        q: "5. Proiectarea logică se derulează prin intermediul următoarelor subfaze:",
+        options: ["a. proiectarea interfețelor şi a dialogurilor", "b. proiectarea fişierelor fizice", "c. transformarea modelului", "d. organizare baze de date"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> La nivel logic creionezi machetele și ferestrele aplicației cu care va interacționa omul (interfețe). [cite: 821]"
+    },
+    {
+        q: "6. Proiectarea dialogurilor:",
+        options: ["a. conturarea datelor", "b. converteşte semnalele", "c. este procesul prin care sunt proiectate toate secvențele folosite de utilizator pentru a comunica cu sistemul", "d. ansamblu omogen"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> Cum comunică omul cu un soft? Printr-o succesiune de 'click-uri și ferestre' (secvențe de dialog). [cite: 821]"
+    },
+    {
+        q: "7. Înregistrarea fizică:",
+        options: ["a. zonă pe suport extern", "b. un grup de câmpuri stocate în zone adiacente de memorie şi restaurate ca un tot unitar", "c. organizează colecțiile", "d. descrie schema"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Fizic, un rând din baza de date se scrie grupat pe hard-disk, câmp cu câmp, pentru a fi citit dintr-un foc (tot unitar). [cite: 821]"
+    },
+    {
+        q: "8. Obiectivele proiectării fizice a fişierelor şi a bazelor de date sunt:",
+        options: ["a. determinarea arhitecturii", "b. selectarea tehnologiilor folosite pentru stocarea datelor", "c. definirea soluțiilor", "d. verificarea modului de îndeplinire"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> 'Fizic' = alegi concret tehnologia. (Ex: folosim SQL pe server sau stocare in cloud?). [cite: 821]"
+    },
+    {
+        q: "9. Definirea modelului fizic al datelor se realizează în conformitate cu:",
+        options: ["a. sistemul de gestiune a bazelor de date (SGBD) ales", "b. semantica", "c. validarea", "d. organizarea datelor"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Când creezi fizic tabelele, te supui limitărilor softului ales (ex. regulile de la Oracle sau SQL Server). [cite: 821]"
+    },
+    {
+        q: "10. Proiectarea fizică a sistemelor informatice are ca obiective principale:",
+        options: ["a. stabilirea componentelor", "b. concepția logică", "c. transformarea modelului conceptual într-un model operațional", "d. definirea structurală"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> Faza fizică 'murdărește mâinile': ia conceptul (ce e pe hârtie) și îl transformă în cod operațional/funcțional. [cite: 821]"
+    },
+    {
+        q: "11. Caracteristici cheie ale unei aplicații mobile în JavaScript:",
+        options: ["a. Uşor de învățat, rapid, se execută pe partea clientului, salvează lăţime de bandă", "b. Nu e limbaj de programare", "c. Fără baze de date", "d. Lucrează independent"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> JS e foarte rapid pentru că se încarcă direct pe telefonul tău (la client), nedepinzând non-stop de server. [cite: 821]"
+    },
+    {
+        q: "12. React Native este limbaj de programare?",
+        options: ["a. Da", "b. Nu, este un framework JavaScript pentru aplicații mobile cross-platform", "c. Limbaj Facebook", "d. Doar interfețe Facebook"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Nu e limbaj propriu-zis. Este o 'unealtă' uriașă (framework) creată cu JS ca să programezi o singură dată și să meargă și pe iOS și pe Android. [cite: 821]"
+    },
+    {
+        q: "13. Un avantaj în a folosi React Native:",
+        options: ["a. Scalabil cu Java", "b. Nativ pentru Android Studio", "c. Beneficiază de funcționalitatea Hot Reloading", "d. Error-freedom"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> 'Hot Reloading' e magia prin care scrii cod și vezi instantaneu pe telefon cum arată interfața, fără să repornești aplicația. [cite: 821]"
+    },
+    {
+        q: "14. Limbajele native Apple și Google:",
+        options: ["a. Objective-C/Kotlin și Swift", "b. Java și Swift/Kotlin", "c. Apple: Objective-C/Swift. Google: Java/Kotlin", "d. Apple: Objective-C. Google: Swift"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> Apple are vechiul Objective-C și noul Swift. Google are vechiul Java și noul Kotlin. [cite: 821]"
+    },
+    {
+        q: "15. Cum mai este denumit Python?",
+        options: ["a. limbaj de programare hacking", "b. Doar MacOS", "c. ERP", "d. Interfețe grafice"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Datorită simplității și librăriilor puternice de securitate, e preferat de analiști și hackeri etici. [cite: 821]"
+    },
+    {
+        q: "16. Cel mai popular limbaj predat în școli și colegii la nivel mondial:",
+        options: ["a. C", "b. Java", "c. C++", "d. Python"],
+        correct: 3,
+        expl: "🧠 <strong>Truc:</strong> Python are o sintaxă extrem de naturală (ca engleza scrisă), perfectă pentru începători/elevi. [cite: 821]"
+    },
+    {
+        q: "17. De ce Java este bun pentru cross-platform?",
+        options: ["a. Rulează pe majoritatea sistemelor (Windows, Linux, Mac) prin mașina virtuală", "b. Baza Google", "c. Diferența de Swift", "d. OOP"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Moto-ul lor: 'Scrii o dată, rulezi oriunde'. Se folosește JVM (Java Virtual Machine). [cite: 821]"
+    },
+    {
+        q: "18. Java și miniaplicațiile web:",
+        options: ["a. Poate programa applets care facilitează interacțiunea utilizatorului", "b. Doar independente", "c. Nu poate fi integrat", "d. Doar Safari"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Applet-urile Java erau progrămele rulate direct în browser (ex: vechile jocuri de pe net). [cite: 821]"
+    },
+    {
+        q: "19. Java ca limbaj popular:",
+        options: ["a. Doar Android", "b. Este portabil, versatil, scalabil şi error-freedom", "c. Doar generație nouă", "d. Doar interfețe"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Este portabil (îl muți pe orice OS) și destul de sigur la erori grave de sistem (memorie). [cite: 821]"
+    },
+    {
+        q: "20. Cele 3 componente Java:",
+        options: ["a. JDK, JRE, JVE", "b. JDK, JRW, JVM", "c. JDE, JRE, JVM", "d. JDK (Development), JRE (Runtime), JVM (Virtual Machine)"],
+        correct: 3,
+        expl: "🧠 <strong>Truc:</strong> Cumperi uneltele de lucru (JDK), le pui pe masă (JRE) și pui motorul care execută codul (JVM). [cite: 821]"
+    },
+    {
+        q: "21. În cadrul modelului obiectelor distribuite (Programare web):",
+        options: ["a. comunică prin canale", "b. există obiecte pe un calculator ce pot fi invocate de obiecte de pe alte calculatoare", "c. mesaje server", "d. asociază cod cu evenimente"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Obiectele nu stau într-un singur loc. Sunt 'distribuite' fizic pe net și se strigă unele pe altele. [cite: 821]"
+    },
+    {
+        q: "22. În cadrul modelului evenimentelor:",
+        options: ["a. transfer mesaje", "b. invocate de alte obiecte", "c. se asociază cod cu evenimente executat automat la declanşare", "d. mesaje server"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> Utilizatorul dă un CLICK (se naște un Eveniment) -> se trage trăgaciul unui cod. [cite: 821]"
+    },
+    {
+        q: "23. Gazdele virtuale uşurează activitatea deoarece:",
+        options: ["a. instanțe server", "b. mai multe configurații", "c. monitorizezi mai multe", "d. se monitorizează execuția unui singur server (fizic) pentru mai multe site-uri"],
+        correct: 3,
+        expl: "🧠 <strong>Truc:</strong> Gazda virtuală îți permite să ai 100 de site-uri pe un singur calculator fizic, monitorizând o singură mașinărie. [cite: 821]"
+    },
+    {
+        q: "24. Avantajul gazdelor virtuale non-IP:",
+        options: ["a. adresă distinctă", "b. nu creează probleme", "c. o singură adresă de IP deservește toate gazdele virtuale", "d. nu e necesară"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> Găzduire bazată pe NUME, nu pe IP. Toate cele 100 de site-uri au același IP. Economisești IP-uri. [cite: 821]"
+    },
+    {
+        q: "25. Într-un document XML, o rădăcină (root):",
+        options: ["a. indică XML", "b. definiție de tip", "c. conține în interiorul său toate celelalte elemente", "d. text util"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> Ca la un copac: totul crește și se ramifică dintr-un singur trunchi/rădăcină principală. [cite: 821]"
+    },
+    {
+        q: "26. CSS: în regula P {color:green}, partea P reprezintă:",
+        options: ["a. un selector", "b. o declarație", "c. asignare", "d. proprietate"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> 'Selectezi' (alegi) din tot site-ul tău doar paragrafele (P) ca să le faci verzi. P e Selectorul. [cite: 821]"
+    },
+    {
+        q: "27. HTML reprezintă:",
+        options: ["a. un program de afișare", "b. un document", "c. un identificator", "d. un limbaj de marcare"],
+        correct: 3,
+        expl: "🧠 <strong>Truc:</strong> HyperText **Markup Language**. Cuvântul Markup se traduce prin 'Limbaj de Marcare' a elementelor. [cite: 821]"
+    },
+    {
+        q: "28. Marcajele dintr-un document HTML reprezintă:",
+        options: ["a. conținut propriu-zis", "b. informații referitoare la structura documentului", "c. identificator", "d. definiție de tip", "e. document tranzitional"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Marcajele (Tag-urile) spun browserului UNDE să pună o poză sau un titlu, adică dictează structura. [cite: 821]"
+    },
+    {
+        q: "29. În cadrul DHTML, CSS se referă la:",
+        options: ["a. multimedia", "b. stilul de prezentare a unui document", "c. cod la client", "d. obiecte client"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> CSS (Cascading Style Sheets). 'Style' -> Stil. Se ocupă doar cu designul, culorile, fonturile. [cite: 821]"
+    },
+    {
+        q: "30. Foaia de stil (stylesheet) pentru un HTML este:",
+        options: ["a. o mulțime de reguli ce se aplică documentului pentru generarea unei prezentări vizuale", "b. programe client", "c. asignări variabile", "d. calitate a unui element"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> 'Reguli de aur' pentru design: Toate titlurile mari să fie roșii, toate textele să aibă font de 14. [cite: 821]"
+    },
+    {
+        q: "31. Identificarea informației ce necesită măsuri speciale contra dezvăluirii (Securitate):",
+        options: ["a. clasificare", "b. certificare", "c. autorizare", "d. autentificare"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> E ca în filme: documentul e 'Clasificat' (Secret, Top Secret) ca să fie protejat diferit. [cite: 821]"
+    },
+    {
+        q: "32. Rolul unei autorități de certificare (CA) este:",
+        options: ["a. de a garanta entităților autenticitatea cheilor publice", "b. confidențialitatea", "c. nonrepudierea", "d. utilizarea certificatelor digitale"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> CA-ul acționează ca un notar public de pe internet. El jură că cheia publică aparține băncii tale. [cite: 821]"
+    },
+    {
+        q: "33. Ce sunt vulnerabilitățile?",
+        options: ["a. elemente potențial slabe din sistem care le fac susceptibile la amenințări", "b. atacuri", "c. probabilități", "d. etichetări"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> A fi vulnerabil înseamnă a avea un 'punct slab' prin care pot intra microbii/hackerii. [cite: 821]"
+    },
+    {
+        q: "34. Pentru a transmite un mesaj secret cuiva (criptosistem cheie publică) folosești:",
+        options: ["a. cheia secretă a emiţătorului", "b. cheia publică a receptorului", "c. cheia publică emiţător", "d. cheia secretă autoritate"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Iei lacătul deschis (cheia publică) al prietenului tău, îi blochezi mesajul, iar el și-l va deschide acasă cu cheia lui secretă. [cite: 821]"
+    },
+    {
+        q: "35. Separarea procesului în părți, punând utilizatori diferiți, e un control:",
+        options: ["a. administrativ", "b. tehnic", "c. fizic", "d. de corectare"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Pentru că dai dispoziții referitoare la personal (cine ce face din departamentul de resurse umane), e o măsură administrativă. [cite: 821]"
+    },
+    {
+        q: "36. Atacurile în care atacatorul obține acces de scriere la fişiere privilegiate (root):",
+        options: ["a. nivel 3", "b. nivel 2", "c. de nivel 5", "d. nivel 6"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> Privilegii maxime + Scriere/Modificare la nivel de sistem înseamnă atac grav de securitate de tip Root Compromise (Nivel 5). [cite: 821]"
+    },
+    {
+        q: "37. Într-un detector de intruziune, o funcție a consolei este:",
+        options: ["a. colectarea și managementul alertelor statice", "b. analiza internă", "c. management configuraţie", "d. colectarea și ștegerea alertelor"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Consola e ca panoul unui paznic: adună informațiile (colectează) și configurează sistemul alertelor. (Răspunsul corectat general este asimilat ca 'A'). [cite: 821]"
+    },
+    {
+        q: "38. Modelul BLP (Bell-LaPadula): Subiectul aflat mai jos detectează un obiect superior din cauza:",
+        options: ["a. securitate simplă", "b. proprietății de închidere", "c. securitate discreționară", "d. integritate simplă"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Bell-LaPadula are o excepție logică numită Proprietatea de Închidere, care arată prezența structurilor (dosarelor) superioare. [cite: 821]"
+    },
+    {
+        q: "39. Transformarea unei aplicaţii ca să fie mult mai greu de înţeles:",
+        options: ["a. server", "b. cod semnat", "c. protecţie prin obfuscarea codului", "d. semnare digitală"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> 'A obfusca' înseamnă a face opac/încâlcit. Scrii cod funcțional dar indescifrabil pentru un om care încearcă să-l fure. [cite: 821]"
+    },
+    {
+        q: "40. Ce reprezintă o vulnerabilitate OS contravenind 'privilegiului minim'?",
+        options: ["a. câteva moduri de operare", "b. autentificare slabă", "c. moştenire", "d. conceptul de superuser (root/admin)"],
+        correct: 3,
+        expl: "🧠 <strong>Truc:</strong> Politica privilegiului minim spune: dă-i omului doar drepturile necesare. Dar 'Superuser-ul' are din start absolut TOATE drepturile, deci e periculos. [cite: 821]"
+    },
+    {
+        q: "41. Utilizarea bazelor de date de la producători diferiți (Oracle, SQL Server) presupune:",
+        options: ["a. Arhitecturi similare securitate", "b. Integritate", "c. Arhitecturi diferite pentru securitatea bazei de date", "d. Operații validare"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> Fiecare firmă gigantică e cu 'bisericuța' ei. Tehnologia lor de securitate din spate diferă mult de la Oracle la SQL Server. [cite: 821]"
+    },
+    {
+        q: "42. În MS SQL Server administrarea securității se realizează prin:",
+        options: ["a. Proceduri stocate furnizate de producător apelate prin instrucţiuni SQL", "b. Regulile de validare", "c. Mecanisme back-up", "d. Instrucțiuni SQL interogare"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> SQL Server are direct niște fragmente de cod uriaș gata făcute de Microsoft (proceduri stocate) cu care controlezi securitatea. [cite: 821]"
+    },
+    {
+        q: "43. Printre componentele arhitecturii de securitate pe SQL Server regăsim:",
+        options: ["a. Privilegii multiple", "b. Privilegii fișiere", "c. Privilegii unice", "d. Privilegii de obiecte"],
+        correct: 3,
+        expl: "🧠 <strong>Truc:</strong> Un 'Obiect' într-o bază de date e un Tabel. Securitatea dă unora dreptul (privilegiul) să umble doar la anumite 'Obiecte'. [cite: 821]"
+    },
+    {
+        q: "44. Unui utilizator obişnuit i se pot acorda:",
+        options: ["a. Privilegii server", "b. Creare baze de date", "c. Privilegii de selectare (SELECT)", "d. Creare tabele"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> Utilizatorul simplu are nevoie doar să Citească informația (comanda SELECT). N-ai voie să îl lași să creeze sau să strice tabele. [cite: 821]"
+    },
+    {
+        q: "45. Privilegiile de sistem includ drepturi de:",
+        options: ["a. Ștergere date", "b. Ștergere a bazelor de date (DROP DATABASE)", "c. Actualizare", "d. Filtrare"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> O acțiune de 'Sistem' înseamnă să razi baza de date cu totul (Database), nu să modifici 3 rânduri în ea (aia e acțiune de Obiect). [cite: 821]"
+    },
+    {
+        q: "46. Alegeți privilegiile de sistem:",
+        options: ["a. UPDATE și CREATE", "b. CREATE TABLE și DROP DATABASE", "c. VIEW și SELECT", "d. DROP și DELETE"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Se leagă de grila anterioară. Să creezi tabele și să razi baze de date (DROP) ține de administrarea 'sistemului', nu de vizualizarea datelor curente. [cite: 821]"
+    },
+    {
+        q: "47. Privilegiile de obiecte EXCLUD instrucţiunea:",
+        options: ["a. DROP", "b. SELECT", "c. INSERT", "d. DELETE"],
+        correct: 0,
+        expl: "🧠 <strong>Truc:</strong> Select (Citești), Insert (Adaugi), Delete (Ștergi un rând) sunt acțiuni pe Obiect. DROP dărâmă clădirea, deci e pe Sistem, excluzându-se de aici! [cite: 821]"
+    },
+    {
+        q: "48. Utilizarea vizualizărilor (Views) într-o arhitectură de securitate asigură:",
+        options: ["a. Ștergere coloane", "b. Ștergere înregistrări", "c. Limitarea înregistrărilor/coloanelor returnate utilizatorului", "d. Modificarea"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> View = îi pui ochelari de cal utilizatorului. Dacă ascunzi salariile directorilor dintr-un tabel cu comanda View, utilizatorul nu le va vedea (le limitezi). [cite: 821]"
+    },
+    {
+        q: "49. Rolurile în Baza de Date:",
+        options: ["a. Elimină conturi", "b. Acordă mai multe drepturi printr-o singură comandă de grupare", "c. Acordă un singur drept", "d. Minim privilegii"],
+        correct: 1,
+        expl: "🧠 <strong>Truc:</strong> Când creezi un 'Rol de Contabil', îi bagi din start 50 de drepturi în el. E mult mai ușor să dai angajatului un Rol decât să stai să-i dai 50 de drepturi individual. [cite: 821]"
+    },
+    {
+        q: "50. Alegeți varianta greşită (Despre sec.):",
+        options: ["a. Lista are un singur privilegiu de sistem", "b. Instrucțiunea GRANT specifică unul/mai mulți useri", "c. Instrucțiunea GRANT trebuie obligatoriu să conțină clauza WITH GRANT OPTION", "d. Pot fi mai multe privilegii de obiecte"],
+        correct: 2,
+        expl: "🧠 <strong>Truc:</strong> C este Fals! 'WITH GRANT OPTION' îi dă omului puterea să dea, mai departe, drepturi și la prietenii lui. Nu e obligatoriu deloc! [cite: 821]"
+    }
+];

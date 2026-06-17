@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grile Licență - Informatică Economică</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .app-container {
+            background-color: white;
+            width: 100%;
+            max-width: 850px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h2 { text-align: center; color: #2c3e50; border-bottom: 2px solid #e9ecef; padding-bottom: 15px; }
+        
+        /* Tabs */
+        .nav-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { padding: 12px 20px; font-size: 1.05em; font-weight: bold; background: #e9ecef; color: #495057; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .tab-btn.active { background: #007bff; color: white; box-shadow: 0 3px 8px rgba(0,123,255,0.3); }
+        .tab-btn:hover:not(.active) { background: #dee2e6; }
+
+        /* Quiz */
+        .question { font-size: 1.15em; font-weight: 600; margin: 20px 0 15px; color: #2c3e50; }
+        .btn-grid { display: flex; flex-direction: column; gap: 10px; }
+        .btn { padding: 12px 20px; font-size: 1em; background: #fff; border: 2px solid #dce0e4; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.2s; color: #333; }
+        .btn:hover:not(:disabled) { background: #e9ecef; }
+        .btn.correct { background: #d4edda !important; border-color: #28a745 !important; color: #155724 !important; font-weight: bold; }
+        .btn.wrong { background: #f8d7da !important; border-color: #dc3545 !important; color: #721c24 !important; text-decoration: line-through; }
+        .btn:disabled { cursor: not-allowed; }
+        
+        /* Explicații */
+        .explanation { display: none; margin-top: 15px; padding: 15px; background: #e2f3f5; border-left: 5px solid #17a2b8; border-radius: 4px; color: #0c5460; line-height: 1.5; }
+        
+        .section { display: none; }
+        .section.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <h2>Pregătire Licență 2026</h2>
+        
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('fundamentale', this)">Discipline Fundamentale</button>
+            <button class="tab-btn" onclick="switchTab('specialitate', this)">Discipline de Specialitate</button>
+        </div>
+
+        <!-- Secțiunea FUNDAMENTALE -->
+        <div id="fundamentale" class="section active">
+            <div id="quiz-fundamentale"></div>
+        </div>
+
+        <!-- Secțiunea SPECIALITATE -->
+        <div id="specialitate" class="section">
+            <div id="quiz-specialitate"></div>
+        </div>
+    </div>
+
+    <script>
+        // BAZA DE DATE - DISCIPLINE FUNDAMENTALE
+        const fundamentaleData = [
+            {
+                q: "1. Gruparea angajaților pe subdiviziuni organizatorice (departamente, servicii, secții, ateliere etc.), în funcție de sarcinile pe care aceștia le execută, reprezintă o activitate specifică funcției:",
+                options: [
+                    "a. previziune",
+                    "b. organizare",
+                    "c. antrenare",
+                    "d. control-evaluare"
+                ],
+                correct: 1,
+                expl: "🧠 <strong>Truc de memorare:</strong> Organizarea structurală se concretizează exact în gruparea activităților pe secții, ateliere, birouri, rezultând structura organizatorică a întreprinderii."
+            },
+            {
+                q: "2. Funcția de coordonare cuprinde un ansamblu de activități prin care se asigură:",
+                options: [
+                    "a. armonizarea și sincronizarea acțiunilor individuale și colective din cadrul întreprinderii",
+                    "b. extrapolarea tendințelor prezente în activitatea întreprinderii",
+                    "c. reconsiderarea factorilor care îi motivează pe salariații întreprinderii",
+                    "d. eliminarea cauzelor care au condus la performanțe sub standardele stabilite inițial"
+                ],
+                correct: 0,
+                expl: "🧠 <strong>Truc de memorare:</strong> Coordonarea înseamnă a face oamenii să lucreze împreună ca un ceasornic. Cuvintele cheie sunt <em>armonizare</em> și <em>sincronizare</em> spre scopul general comun."
+            },
+            {
+                q: "3. Sfera de autoritate reprezintă:",
+                options: [
+                    "a. gradul de îndeplinire a sarcinilor de către manager",
+                    "b. numărul de persoane sau de compartimente subordonate nemijlocit de către un manager",
+                    "c. cantitatea de muncă pe care trebuie să o depună un manager",
+                    "d. competențele pe care le deține un manager în domeniul postului ocupat"
+                ],
+                correct: 1,
+                expl: "🧠 <strong>Truc de memorare:</strong> Cât de 'mare' este influența ta? Sfera ta se măsoară strict în câți oameni sau câte departamente conduci <em>direct</em> (nemijlocit)."
+            }
+        ];
+
+        // BAZA DE DATE - DISCIPLINE DE SPECIALITATE
+        const specialitateData = [
+            {
+                q: "1. Obiectivele etapei de proiectare logică a unui sistem informatic sunt:",
+                options: [
+                    "a) determinarea cerințelor organizatorice informaționale și procedurale ale beneficiarilor",
+                    "b) descrierea soluțiilor sistemului propus",
+                    "c) definirea sistemului informatic din punct de vedere structural și funcțional",
+                    "d) prezentarea metodelor folosite de culegere a datelor"
+                ],
+                correct: 2,
+                expl: "🧠 <strong>Truc de memorare:</strong> Logica = Structură + Funcționalitate. Proiectarea logică elaborează concepția sistemului (din ce e format și cum funcționează ca un tot unitar)."
+            },
+            {
+                q: "2. Proiectarea logică a unui sistem informatic presupune:",
+                options: [
+                    "a) determinarea cerințelor organizatorice",
+                    "b) stabilirea componentelor sistemului informatic, a legăturilor dintre ele și a funcționalității structurii sale",
+                    "c) elaborarea strategiei de definire a procedurilor",
+                    "d) proiectarea structurală și funcțională a datelor organizate în baze de date la nivelul aplicațiilor"
+                ],
+                correct: 1,
+                expl: "🧠 <strong>Truc de memorare:</strong> Se leagă direct de întrebarea 1. Pentru a defini sistemul structural și funcțional, trebuie să îi stabilești clar componentele și legăturile dintre ele."
+            },
+            {
+                q: "3. Intrările sistemului informatic:",
+                options: [
+                    "a) sunt reprezentate de operațiile prin care se generează un flux de date ce semnifică schimbările în colecțiile de date",
+                    "b) realizează actualizarea și exploatarea colecțiilor de date",
+                    "c) acționează asupra colecțiilor de date",
+                    "d) constituie rezultatul prelucrării colecțiilor de date"
+                ],
+                correct: 0,
+                expl: "🧠 <strong>Truc de memorare:</strong> Intrările sunt tranzacțiile externe (operațiile de intrare) care produc modificări și actualizează baza de date."
+            }
+        ];
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            
+            btn.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function renderQuiz(dataArray, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = ''; // Curăță containerul
+            
+            dataArray.forEach((item, qIndex) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = item.q;
+                
+                const btnGrid = document.createElement('div');
+                btnGrid.className = 'btn-grid';
+                
+                item.options.forEach((optText, oIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn';
+                    btn.innerHTML = optText;
+                    btn.onclick = function() { checkAnswer(this, qIndex, oIndex, dataArray, containerId); };
+                    btnGrid.appendChild(btn);
+                });
+
+                const explDiv = document.createElement('div');
+                explDiv.id = `expl-${containerId}-${qIndex}`;
+                explDiv.className = 'explanation';
+                explDiv.innerHTML = item.expl;
+
+                container.appendChild(questionDiv);
+                container.appendChild(btnGrid);
+                container.appendChild(explDiv);
+            });
+        }
+
+        function checkAnswer(clickedBtn, qIndex, oIndex, dataArray, containerId) {
+            const btnGrid = clickedBtn.parentElement;
+            const buttons = btnGrid.querySelectorAll('button');
+            const explDiv = document.getElementById(`expl-${containerId}-${qIndex}`);
+            
+            // Dezactivează butoanele după răspuns
+            buttons.forEach(b => b.disabled = true);
+            
+            if (oIndex === dataArray[qIndex].correct) {
+                clickedBtn.classList.add('correct');
+            } else {
+                clickedBtn.classList.add('wrong');
+                buttons[dataArray[qIndex].correct].classList.add('correct');
+            }
+            
+            explDiv.style.display = 'block';
+        }
+
+        // Inițializare aplicație
+        renderQuiz(fundamentaleData, 'quiz-fundamentale');
+        renderQuiz(specialitateData, 'quiz-specialitate');
+    </script>
+</body>
+</html>
